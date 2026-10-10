@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#07040a" />
+<title>ITACHI · ADMIN</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#07040a;--s:#0e0812;--s2:#140b18;--l:#241226;--l2:#1a0d1c;--t:#f2e8f5;--m:#7a6b82;--m2:#4a3f52;--r:#ff2d40;--g:#4ade80;--y:#f5c542;--v:#b794f6}
+body{background:var(--bg);color:var(--t);font-family:Inter,sans-serif;font-size:15px;min-height:100dvh;padding:14px;padding-top:calc(14px + env(safe-area-inset-top));padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.wrap{max-width:960px;margin:0 auto}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.brand{font-weight:900;font-size:20px}
+.brand .r{color:var(--r)}
+.spacer{flex:1}
+.badge{padding:4px 10px;border-radius:100px;background:var(--s);border:1px solid var(--l);font-size:11px;color:var(--m)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px;-webkit-overflow-scrolling:touch}
+.tabs button{background:var(--s);border:1px solid var(--l);color:var(--m);font-family:inherit;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.tabs button.on{background:var(--r);border-color:var(--r);color:#fff}
+.card{background:var(--s);border:1px solid var(--l);border-radius:14px;padding:16px;margin-bottom:12px}
+.card h2{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--r);margin-bottom:12px}
+label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--m);margin-bottom:6px;display:block}
+input,textarea,select{width:100%;background:var(--s2);border:1px solid var(--l2);border-radius:10px;padding:11px 13px;color:var(--t);font-size:15px;font-family:inherit;outline:none;margin-bottom:10px;-webkit-appearance:none}
+input:focus,textarea:focus{border-color:var(--r);box-shadow:0 0 0 3px rgba(255,45,64,.1)}
+textarea{min-height:80px;resize:vertical;font-family:ui-monospace,Menlo,monospace;font-size:13px}
+button.b{height:46px;border:none;border-radius:11px;font-family:inherit;font-weight:700;font-size:14px;color:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 18px}
+button.b.primary{background:linear-gradient(135deg,#ff2d40,#8a001a)}
+button.b.ghost{background:var(--s2);border:1px solid var(--l);color:var(--t)}
+button.b:disabled{opacity:.5;cursor:not-allowed}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns button.b{flex:1;min-width:120px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;color:var(--m);font-size:10px;text-transform:uppercase;letter-spacing:.06em;padding:8px;border-bottom:1px solid var(--l2);font-weight:600}
+td{padding:8px;border-bottom:1px solid var(--l2);color:var(--t);word-break:break-all;vertical-align:top}
+td.mono{font-family:ui-monospace,Menlo,monospace;font-size:11px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:12px}
+.kpi{background:var(--s);border:1px solid var(--l);border-radius:12px;padding:14px}
+.kpi .k{font-size:10px;color:var(--m);text-transform:uppercase;letter-spacing:.08em}
+.kpi .v{font-size:24px;font-weight:800;color:#fff;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .v.g{color:var(--g)}
+.kpi .v.y{color:var(--y)}
+.log{background:#07030a;border:1px solid var(--l2);border-radius:10px;padding:10px;max-height:280px;overflow-y:auto;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.7}
+.log div{padding:1px 0;color:#9a8ba2}
+.log .ok{color:var(--g)}.log .err{color:#ef4444}.log .warn{color:var(--y)}
+.hide{display:none !important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand"><span class="r">I</span>TACHI · ADMIN</div>
+    <div class="spacer"></div>
+    <span class="badge" id="me">offline</span>
+  </div>
+
+  <div class="card" id="loginCard">
+    <h2>DB Auth</h2>
+    <label>DB URL</label>
+    <input id="dbUrl" placeholder="https://xxxx-default-rtdb.firebaseio.com" />
+    <label>Secret / auth (optional)</label>
+    <input id="dbSec" placeholder="optional" />
+    <div class="btns"><button class="b primary" id="btnAuth">CONNECT</button></div>
+    <div style="font-size:11px;color:var(--m);margin-top:8px" id="authMsg"></div>
+  </div>
+
+  <div class="hide" id="app">
+    <div class="tabs" id="tabs">
+      <button data-tab="dash" class="on">📊 Dashboard</button>
+      <button data-tab="dbs">🗄 DBs</button>
+      <button data-tab="keys">🔑 Keys</button>
+      <button data-tab="users">👥 Clients</button>
+    </div>
+
+    <section id="tab-dash">
+      <div class="kpis" id="kpis"></div>
+      <div class="card">
+        <h2>Actions</h2>
+        <div class="btns">
+          <button class="b ghost" id="btnPing">Ping DB</button>
+          <button class="b ghost" id="btnStats">Refresh stats</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-dbs" class="hide">
+      <div class="card">
+        <h2>DB URLs · bulk</h2>
+        <textarea id="dbList" placeholder="one URL per line"></textarea>
+        <div class="btns">
+          <button class="b primary" id="dbsSave">Save to DB</button>
+          <button class="b ghost" id="dbsLoad">Load from DB</button>
+          <button class="b ghost" id="dbsLocal">Load local</button>
+        </div>
+        <div style="font-size:11px;color:var(--m);margin-top:8px" id="dbsMsg"></div>
+      </div>
+    </section>
+
+    <section id="tab-keys" class="hide">
+      <div class="card">
+        <h2>Access keys</h2>
+        <label>AMATERASU</label><input id="kAm" />
+        <label>NON-STOP</label><input id="kNs" />
+        <label>Firebase secret (optional)</label><input id="kSec" />
+        <div class="btns">
+          <button class="b primary" id="kSave">Save to DB</button>
+          <button class="b ghost" id="kLoad">Load from DB</button>
+        </div>
+        <div style="font-size:11px;color:var(--m);margin-top:8px" id="kMsg"></div>
+      </div>
+    </section>
+
+    <section id="tab-users" class="hide">
+      <div class="card">
+        <input id="uSearch" placeholder="search id/mob…" />
+        <div class="btns"><button class="b ghost" id="uRefresh">Refresh</button></div>
+        <div style="max-height:440px;overflow-y:auto;margin-top:10px">
+          <table>
+            <thead><tr><th>ID</th><th>Status</th><th>Mobile</th><th>Provider</th></tr></thead>
+            <tbody id="uBody"></tbody>
+          </table>
+        </div>
+        <div style="font-size:11px;color:var(--m);margin-top:8px" id="uMsg"></div>
+      </div>
+    </section>
+
+    <div class="card"><div class="log" id="logBox"></div></div>
+  </div>
+
+</div>
+
+<script>
+const LS_ADMIN = 'itachi_admin';
+const LS_DBS = 'itachi_dbs';
+const LS_KEYS = 'itachi_keys';
+
+const $ = id => document.getElementById(id);
+const logEl = $('logBox');
+function log(m, c=''){ const d=document.createElement('div'); d.className=c; d.textContent=m; logEl.appendChild(d); logEl.scrollTop=1e9; }
+
+let ADMIN_DB = '', ADMIN_SEC = '';
+
+function loadAdmin(){
+  try{
+    const s = JSON.parse(localStorage.getItem(LS_ADMIN) || '{}');
+    if (s.url) ADMIN_DB = s.url;
+    if (s.sec) ADMIN_SEC = s.sec;
+  }catch(e){}
+}
+function saveAdmin(url, sec){
+  ADMIN_DB = url; ADMIN_SEC = sec;
+  localStorage.setItem(LS_ADMIN, JSON.stringify({url, sec}));
+}
+loadAdmin();
+
+function fetchT(url, opts={}, ms=6000){
+  const c = new AbortController();
+  const t = setTimeout(()=>c.abort(), ms);
+  return fetch(url, {...opts, signal:c.signal}).then(r=>{clearTimeout(t);return r;}).catch(e=>{clearTimeout(t);throw e;});
+}
+function base(url){ return url.replace(/\/$/,''); }
+function authParam(sec){ return sec && sec.trim() ? sec.trim() : ''; }
+
+async function fbGet(url, path){
+  const a = authParam(ADMIN_SEC);
+  let u = base(url) + '/' + path + '.json';
+  if (a) u += '?auth=' + encodeURIComponent(a);
+  const r = await fetchT(u);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+async function fbPut(url, path, data){
+  const a = authParam(ADMIN_SEC);
+  let u = base(url) + '/' + path + '.json';
+  if (a) u += '?auth=' + encodeURIComponent(a);
+  const r = await fetchT(u, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+$('btnAuth').onclick = async () => {
+  const url = $('dbUrl').value.trim();
+  const sec = $('dbSec').value.trim();
+  if (!url.startsWith('http')){ $('authMsg').textContent = 'invalid url'; return; }
+  ADMIN_SEC = sec;
+  try{
+    await fbGet(url, '.json');
+    saveAdmin(url, sec);
+    $('me').textContent = 'connected';
+    $('authMsg').textContent = 'ok';
+    log('connected to ' + url, 'ok');
+    $('loginCard').classList.add('hide');
+    $('app').classList.remove('hide');
+    loadDash(); loadDbList(); loadKeys(); loadClients();
+  }catch(e){ $('authMsg').textContent = 'fail: ' + e.message; log('auth fail: ' + e.message, 'err'); }
+};
+
+$('tabs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  [...$('tabs').children].forEach(x => x.classList.toggle('on', x === b));
+  ['dash','dbs','keys','users'].forEach(t => { $('tab-' + t).classList.toggle('hide', t !== b.dataset.tab); });
+});
+
+async function loadDash(){
+  try{
+    const all = await fbGet(ADMIN_DB, 'clients');
+    const clients = all ? Object.entries(all) : [];
+    const online = clients.filter(([_, v]) => v && v.status).length;
+    $('kpis').innerHTML = [
+      {k:'Clients', v: clients.length},
+      {k:'Online', v: online, cls:'g'},
+      {k:'Offline', v: clients.length - online, cls:'y'}
+    ].map(x => `<div class="kpi"><div class="k">${x.k}</div><div class="v ${x.cls||''}">${x.v}</div></div>`).join('');
+  }catch(e){ log('dash: ' + e.message, 'err'); }
+}
+$('btnPing').onclick = async () => { try{ await fbGet(ADMIN_DB, '.json'); log('ping ok', 'ok'); }catch(e){ log('ping fail: ' + e.message, 'err'); } };
+$('btnStats').onclick = loadDash;
+
+async function loadDbList(){
+  try{
+    const data = await fbGet(ADMIN_DB, 'config/dbs');
+    let urls = [];
+    if (Array.isArray(data)) urls = data;
+    else if (data && typeof data === 'object') urls = Object.values(data);
+    $('dbList').value = urls.join('\n');
+    $('dbsMsg').textContent = urls.length + ' from DB';
+  }catch(e){ $('dbsMsg').textContent = 'load fail: ' + e.message; }
+}
+$('dbsLoad').onclick = loadDbList;
+$('dbsLocal').onclick = () => {
+  try{ const s = JSON.parse(localStorage.getItem(LS_DBS) || '[]'); $('dbList').value = s.join('\n'); $('dbsMsg').textContent = s.length + ' local'; }catch(e){ $('dbsMsg').textContent = 'none'; }
+};
+$('dbsSave').onclick = async () => {
+  const urls = $('dbList').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  try{
+    await fbPut(ADMIN_DB, 'config/dbs', urls);
+    localStorage.setItem(LS_DBS, JSON.stringify(urls));
+    $('dbsMsg').textContent = urls.length + ' saved';
+    log('db list saved (' + urls.length + ')', 'ok');
+  }catch(e){ $('dbsMsg').textContent = 'save fail: ' + e.message; log('dbs save: ' + e.message, 'err'); }
+};
+
+async function loadKeys(){
+  try{
+    const data = await fbGet(ADMIN_DB, 'config/keys');
+    if (data && typeof data === 'object'){
+      $('kAm').value = data.amaterasu || '';
+      $('kNs').value = data.nonstop || '';
+      $('kSec').value = data.firebase_secret || '';
+      $('kMsg').textContent = 'loaded';
+    } else { $('kMsg').textContent = 'none'; }
+  }catch(e){ $('kMsg').textContent = 'fail: ' + e.message; }
+}
+$('kLoad').onclick = loadKeys;
+$('kSave').onclick = async () => {
+  const data = {amaterasu: $('kAm').value.trim(), nonstop: $('kNs').value.trim(), firebase_secret: $('kSec').value.trim()};
+  try{
+    await fbPut(ADMIN_DB, 'config/keys', data);
+    localStorage.setItem(LS_KEYS, JSON.stringify(data));
+    $('kMsg').textContent = 'saved';
+    log('keys saved', 'ok');
+  }catch(e){ $('kMsg').textContent = 'fail: ' + e.message; log('keys save: ' + e.message, 'err'); }
+};
+
+async function loadClients(){
+  try{
+    const all = await fbGet(ADMIN_DB, 'clients');
+    const q = ($('uSearch').value || '').toLowerCase();
+    const rows = [];
+    if (all && typeof all === 'object'){
+      for (const [id, v] of Object.entries(all)){
+        if (!v || typeof v !== 'object') continue;
+        const mob = String(v.mobNo || v.phone || v.mobile || '');
+        if (q && !id.toLowerCase().includes(q) && !mob.includes(q)) continue;
+        rows.push({id, status: !!v.status, mob, prov: String(v.service_provider || '')});
+      }
+    }
+    $('uBody').innerHTML = rows.map(r => `<tr><td class="mono">${r.id}</td><td>${r.status?'online':'offline'}</td><td class="mono">${r.mob||'—'}</td><td>${r.prov||'—'}</td></tr>`).join('');
+    $('uMsg').textContent = rows.length + ' rows';
+  }catch(e){ $('uMsg').textContent = 'fail: ' + e.message; }
+}
+$('uRefresh').onclick = loadClients;
+$('uSearch').addEventListener('input', () => { clearTimeout(window._ut); window._ut = setTimeout(loadClients, 250); });
+
+if (ADMIN_DB){
+  $('dbUrl').value = ADMIN_DB;
+  $('dbSec').value = ADMIN_SEC;
+  $('btnAuth').click();
+}
+log('admin ready');
+</script>
+</body>
+</html>
